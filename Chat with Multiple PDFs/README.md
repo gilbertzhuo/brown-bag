@@ -52,7 +52,10 @@
 ### Running the Application
 
 To launch the application, run:
+
+```
 streamlit run app.py
+```
 
 ## Usage
 
