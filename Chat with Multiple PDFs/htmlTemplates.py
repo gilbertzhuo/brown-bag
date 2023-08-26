@@ -28,7 +28,7 @@ css = '''
 bot_template = '''
 <div class="chat-message bot">
     <div class="avatar">
-        <img src="https://i0.wp.com/wemadethislife.com/wp-content/uploads/2022/12/Screenshot-2022-04-26-at-2.32.19-PM.png?w=720&ssl=1" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+        <img src="https://images.glints.com/unsafe/360x0/glints-dashboard.s3.amazonaws.com/company-logo/b785d98c3e5be1370cb8e66e73effcee.png" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
     </div>
     <div class="message">{{MSG}}</div>
 </div>
