@@ -12,7 +12,7 @@ const ConsultGP = (props: Props) => {
     <Card
       className="hover:cursor-pointer hover:opacity-75"
       onClick={() => {
-        router.push("/doctor");
+        router.push("/virtual-clinic");
       }}
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">

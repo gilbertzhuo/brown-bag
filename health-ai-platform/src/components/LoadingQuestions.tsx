@@ -5,11 +5,11 @@ import Image from "next/image";
 type Props = { finished: boolean };
 
 const loadingTexts = [
-  "Generating questions...",
-  "Unleashing the power of curiosity...",
-  "Diving deep into the ocean of questions..",
-  "Harnessing the collective knowledge of the cosmos...",
-  "Igniting the flame of wonder and exploration...",
+  "Hydrating for optimal health...",
+  "Remembering to take breaks and stretch...",
+  "Choosing whole foods over processed ones...",
+  "Prioritizing mental well-being and self-care...",
+  "Engaging in regular exercise and activity...",
 ];
 
 const LoadingQuestions = ({ finished }: Props) => {
