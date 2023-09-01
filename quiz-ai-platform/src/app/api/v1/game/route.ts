@@ -8,6 +8,7 @@ import axios from "axios";
 export async function POST(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
+    const originalCookies = req.headers.get("cookie");
     if (!session?.user) {
       return NextResponse.json(
         {
@@ -28,6 +29,20 @@ export async function POST(req: Request, res: Response) {
         topic,
       },
     });
+    await prisma.topicCount.upsert({
+      where: {
+        topic,
+      },
+      create: {
+        topic,
+        count: 1,
+      },
+      update: {
+        count: {
+          increment: 1,
+        },
+      },
+    });
     const { data } = await axios.post(
       `${process.env.API_URL}/api/v1/questions`,
       {
@@ -36,6 +51,9 @@ export async function POST(req: Request, res: Response) {
         type,
       },
       {
+        headers: {
+          cookie: originalCookies,
+        },
         withCredentials: true,
       }
     );
