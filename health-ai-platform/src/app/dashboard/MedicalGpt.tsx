@@ -1,32 +1,34 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import CustomWordCloud from "@/components/CustomWordCloud";
-import { prisma } from "@/lib/db";
 import { Bot } from "lucide-react";
-type Props = {};
+import GPTChat from "@/components/GPTChat";
+import { getAuthSession } from "@/lib/nextauth";
+import { redirect } from "next/navigation";
 
-const MedicalGpt = async (props: Props) => {
-  const topics = await prisma.topicCount.findMany({});
-  const formattedTopics = topics.map((topic) => {
-    return {
-      text: topic.topic,
-      value: topic.count,
-    };
-  });
+const MedicalGpt = async () => {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    return redirect("/");
+  }
   return (
     <Card className="col-span-4">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle className="text-2xl font-bold">Medical AI</CardTitle>
         <Bot size={28} strokeWidth={2.5} />
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-2">
         <p className="text-sm text-muted-foreground">
-          Large Language Model aligned to the medical domain to more accurately
-          and safely answer medical questions.
+          An advanced AI language model specialized in healthcare, offering
+          precise and rapid medical insights.
         </p>
       </CardContent>
       <CardContent className="pl-2">
-        <CustomWordCloud formattedTopics={formattedTopics} />
+        <GPTChat
+          user={{
+            name: session?.user.name || null,
+            image: session?.user.image || null,
+          }}
+        />
       </CardContent>
     </Card>
   );

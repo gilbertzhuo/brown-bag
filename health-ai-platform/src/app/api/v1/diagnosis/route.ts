@@ -21,9 +21,9 @@ export async function POST(req: Request, res: Response) {
     }
     const body = await req.json();
     const { amount, topic, type } = QuizCreationSchema.parse(body);
-    const game = await prisma.game.create({
+    const diagnosis = await prisma.diagnosis.create({
       data: {
-        gameType: type,
+        diagnosisType: type,
         timeStarted: new Date(),
         userId: session.user.id,
         topic,
@@ -77,7 +77,7 @@ export async function POST(req: Request, res: Response) {
           question: question.question,
           answer: question.answer,
           options: JSON.stringify(options),
-          gameId: game.id,
+          diagnosisId: diagnosis.id,
           questionType: "mcq",
         };
       });
@@ -91,7 +91,7 @@ export async function POST(req: Request, res: Response) {
         return {
           question: question.question,
           answer: question.answer,
-          gameId: game.id,
+          diagnosisId: diagnosis.id,
           questionType: "open_ended",
         };
       });
@@ -100,7 +100,7 @@ export async function POST(req: Request, res: Response) {
       });
     }
     return NextResponse.json({
-      gameId: game.id,
+      diagnosisId: diagnosis.id,
     });
   } catch (error) {
     if (error instanceof ZodError) {

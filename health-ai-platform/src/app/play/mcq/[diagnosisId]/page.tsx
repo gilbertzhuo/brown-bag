@@ -6,18 +6,18 @@ import MCQ from "@/components/MCQ";
 
 type Props = {
   params: {
-    gameId: string;
+    diagnosisId: string;
   };
 };
 
-const MCQPage = async ({ params: { gameId } }: Props) => {
+const MCQPage = async ({ params: { diagnosisId } }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
   }
-  const game = await prisma.game.findUnique({
+  const diagnosis = await prisma.diagnosis.findUnique({
     where: {
-      id: gameId,
+      id: diagnosisId,
     },
     include: {
       questions: {
@@ -29,10 +29,10 @@ const MCQPage = async ({ params: { gameId } }: Props) => {
       },
     },
   });
-  if (!game || game.gameType !== "mcq") {
+  if (!diagnosis || diagnosis.gameType !== "mcq") {
     return redirect("/quiz");
   }
-  return <MCQ game={game} />;
+  return <MCQ diagnosis={diagnosis} />;
 };
 
 export default MCQPage;

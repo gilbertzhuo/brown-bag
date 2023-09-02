@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import React from "react";
 import QuizMeCard from "@/components/dashboard/QuizMeCard";
 import HistoryCard from "@/components/dashboard/HistoryCard";
-import HotTopicsCard from "./HotTopicsCard";
 import RecentConsultations from "./RecentConsultations";
 import ConsultGP from "@/components/dashboard/ConsultGP";
 import MedicalGpt from "./MedicalGpt";
@@ -30,7 +29,6 @@ const Dashboard = async (props: Props) => {
         {/* <HistoryCard /> */}
       </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* <HotTopicsCard /> */}
         <MedicalGpt />
         <RecentConsultations />
       </div>

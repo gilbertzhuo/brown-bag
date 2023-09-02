@@ -43,22 +43,30 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Game          Game[]
+  Diagnosis     Diagnosis[]
+  dateOfBirth   DateTime?
+  gender        String?
+  height        Float?
+  weight        Float?
+  location      String?
+  bloodPressure String?
+  medicalHistory String?
+  familyHistory String?
 }
 
-enum GameType {
+enum DiagnosisType {
   mcq
   open_ended
 }
 
-model Game {
+model Diagnosis {
   id          String     @id @default(cuid())
   userId      String
   questions   Question[]
   timeStarted DateTime
   topic       String
   timeEnded   DateTime?
-  gameType    GameType
+  diagnosisType    DiagnosisType
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -74,14 +82,14 @@ model Question {
   id                String   @id @default(cuid())
   question          String
   answer            String
-  gameId            String
+  diagnosisId       String
   options           Json?
   percentageCorrect Float?
   isCorrect         Boolean?
-  questionType      GameType
+  questionType      DiagnosisType
   userAnswer        String?
 
-  game Game @relation(fields: [gameId], references: [id])
+  diagnosis Diagnosis @relation(fields: [diagnosisId], references: [id])
 
-  @@index([gameId])
+  @@index([diagnosisId])
 }

@@ -6,6 +6,11 @@ interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
 }
 
+type OpenAIMessage = {
+  role: "function" | "system" | "user" | "assistant";
+  content: string;
+};
+
 export async function strict_output(
   system_prompt: string,
   user_prompt: string | string[],
@@ -138,4 +143,45 @@ export async function strict_output(
   }
 
   return [];
+}
+
+export async function generateText(
+  system_prompt: string,
+  user_prompt: string,
+  messageHistory: OpenAIMessage[] = [],
+  model: string = "gpt-3.5-turbo",
+  temperature: number = 1,
+  num_tries: number = 3,
+  verbose: boolean = false
+) {
+  let error_msg = "";
+  messageHistory = [
+    { role: "system", content: system_prompt + error_msg },
+    ...messageHistory,
+    { role: "user", content: user_prompt },
+  ];
+  for (let i = 0; i < num_tries; i++) {
+    const response = await openai.chat.completions.create({
+      temperature: temperature,
+      model: model,
+      messages: messageHistory,
+    });
+
+    let res = response.choices[0].message?.content ?? "";
+
+    if (verbose) {
+      console.log("\nUser prompt:", user_prompt);
+      console.log("\nGPT response:", res);
+    }
+
+    try {
+      return res;
+    } catch (e) {
+      error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
+      console.log("An exception occurred:", e);
+      console.log("Current invalid format ", res);
+    }
+  }
+
+  return "";
 }

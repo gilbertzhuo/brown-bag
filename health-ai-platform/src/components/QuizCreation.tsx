@@ -41,7 +41,7 @@ const QuizCreation = (props: Props) => {
   const { mutate: getQuestions, isLoading } = useMutation({
     mutationFn: async ({ amount, topic, type }: Input) => {
       const response = await axios.post(
-        "/api/v1/game",
+        "/api/v1/diagnosis",
         {
           amount,
           topic,
@@ -72,13 +72,13 @@ const QuizCreation = (props: Props) => {
         type: input.type,
       },
       {
-        onSuccess: ({ gameId }) => {
+        onSuccess: ({ diagnosisId }) => {
           setFinished(true);
           setTimeout(() => {
             if (form.getValues("type") == "open_ended") {
-              router.push(`/play/open-ended/${gameId}`);
+              router.push(`/play/open-ended/${diagnosisId}`);
             } else {
-              router.push(`/play/mcq/${gameId}`);
+              router.push(`/play/mcq/${diagnosisId}`);
             }
           }, 1000);
         },
@@ -96,10 +96,9 @@ const QuizCreation = (props: Props) => {
   }
 
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <Card className="w-[370px]">
+      <Card className="col-span-4">
         <CardHeader>
-          <CardTitle className="font-bold text-2xl">Quiz Creation</CardTitle>
+          <CardTitle className="font-bold text-2xl">Quick Diagnosis</CardTitle>
           <CardDescription>Choose a topic</CardDescription>
         </CardHeader>
         <CardContent>
@@ -154,7 +153,7 @@ const QuizCreation = (props: Props) => {
                   }
                 >
                   <CopyCheck className="w-4 h-4 mr-2" />
-                  Multiple Choice
+                  Symptoms
                 </Button>
                 <Separator orientation="vertical" />
                 <Button
@@ -170,9 +169,12 @@ const QuizCreation = (props: Props) => {
                   }
                 >
                   <BookOpen className="w-4 h-4 mr-2" />
-                  Open Ended
+                  Illness
                 </Button>
               </div>
+              <FormDescription className="!mt-2">
+                Please provide a topic
+              </FormDescription>
               <Button type="submit" disabled={isLoading}>
                 Submit
               </Button>
@@ -180,7 +182,7 @@ const QuizCreation = (props: Props) => {
           </Form>
         </CardContent>
       </Card>
-    </div>
+   
   );
 };
 
