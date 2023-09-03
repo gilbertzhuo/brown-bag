@@ -19,7 +19,7 @@ const Profile = async () => {
       </div>
 
       <div className="grid gap-4 mt-4 grid-cols-2">
-        <UserDetails user={session?.user} />
+        <UserDetails />
       </div>
     </main>
   );
