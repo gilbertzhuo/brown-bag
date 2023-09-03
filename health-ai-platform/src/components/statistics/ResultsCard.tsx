@@ -1,41 +1,32 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, Trophy } from "lucide-react";
+import { HeartPulse } from "lucide-react";
 
 type Props = {
   accuracy: number;
 };
 
 const ResultsCard = ({ accuracy }: Props) => {
-  let trophyStroke, trophyText, accuracyText;
-
-  if (accuracy > 75) {
-    trophyStroke = "gold";
-    trophyText = "Impressive!";
-    accuracyText = "> 75% accuracy";
-  } else if (accuracy > 25) {
-    trophyStroke = "silver";
-    trophyText = "Good Job!";
-    accuracyText = "> 25% accuracy";
-  } else {
-    trophyStroke = "bronze";
-    trophyText = "Nice Try!";
-    accuracyText = "< 25% accuracy";
+  let text =
+    "It appears that you are exhibiting little to no symptoms. This suggests a low likelihood of having the disease. However, it's essential to consult a healthcare professional for a proper evaluation and advice on maintaining your health.";
+  if (accuracy >= 40) {
+    text =
+      "You are exhibiting a moderate number of symptoms. While this may indicate a potential concern, it's not a definitive diagnosis. It's crucial to consult a healthcare professional for a comprehensive evaluation and further testing to determine the cause of these symptoms.";
+  } else if (accuracy >= 70) {
+    text =
+      "You are exhibiting a high number of symptoms associated with the disease. This could be a cause for concern, and it's essential to seek immediate medical attention. Contact a healthcare professional or visit a medical facility for a thorough evaluation and diagnosis.";
   }
 
   return (
     <Card className="md:col-span-7">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-2xl font-bold">Results</CardTitle>
-        <Award />
+        <HeartPulse />
       </CardHeader>
-      <CardContent className="flex flex-col items-center justify-center h-3/5">
-        <Trophy className="mr-4" stroke={trophyStroke} size={50} />
-        <div className="flex flex-col text-2xl font-semibold text-yellow-400">
-          <span>{trophyText}</span>
-          <span className="text-sm text-center text-black opacity-50">
-            {accuracyText}
-          </span>
+      <CardContent className="flex flex-col items-center justify-center">
+        <div className="flex flex-col font-semibold">
+          <span>You have {accuracy}% of the symptoms.</span>
+          <span className="text-xs text-slate-600">{text}</span>
         </div>
       </CardContent>
     </Card>

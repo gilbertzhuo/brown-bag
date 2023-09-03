@@ -10,7 +10,7 @@ type Props = {
   };
 };
 
-const MCQPage = async ({ params: { diagnosisId } }: Props) => {
+const QuizPage = async ({ params: { diagnosisId } }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
@@ -24,15 +24,14 @@ const MCQPage = async ({ params: { diagnosisId } }: Props) => {
         select: {
           id: true,
           question: true,
-          options: true,
         },
       },
     },
   });
-  if (!diagnosis || diagnosis.gameType !== "mcq") {
-    return redirect("/quiz");
+  if (!diagnosis) {
+    return redirect("/diagnosis");
   }
   return <MCQ diagnosis={diagnosis} />;
 };
 
-export default MCQPage;
+export default QuizPage;

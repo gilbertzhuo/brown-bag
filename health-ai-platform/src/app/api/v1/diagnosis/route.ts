@@ -23,7 +23,6 @@ export async function POST(req: Request, res: Response) {
     const { amount, topic, type } = QuizCreationSchema.parse(body);
     const diagnosis = await prisma.diagnosis.create({
       data: {
-        diagnosisType: type,
         timeStarted: new Date(),
         userId: session.user.id,
         topic,
@@ -57,48 +56,13 @@ export async function POST(req: Request, res: Response) {
         withCredentials: true,
       }
     );
-    if (type == "mcq") {
-      type mcqQuestion = {
-        question: string;
-        answer: string;
-        option1: string;
-        option2: string;
-        option3: string;
+    let manyData = data.questions.map((question: any) => {
+      return {
+        question: question["question"],
+        diagnosisId: diagnosis.id,
       };
-      let manyData = data.questions.map((question: mcqQuestion) => {
-        let options = [
-          question.answer,
-          question.option1,
-          question.option2,
-          question.option3,
-        ];
-        options = options.sort(() => Math.random() - 0.5);
-        return {
-          question: question.question,
-          answer: question.answer,
-          options: JSON.stringify(options),
-          diagnosisId: diagnosis.id,
-          questionType: "mcq",
-        };
-      });
-      await prisma.question.createMany({ data: manyData });
-    } else if (type === "open_ended") {
-      type openQuestion = {
-        question: string;
-        answer: string;
-      };
-      let manyData = data.questions.map((question: openQuestion) => {
-        return {
-          question: question.question,
-          answer: question.answer,
-          diagnosisId: diagnosis.id,
-          questionType: "open_ended",
-        };
-      });
-      await prisma.question.createMany({
-        data: manyData,
-      });
-    }
+    });
+    await prisma.question.createMany({ data: manyData });
     return NextResponse.json({
       diagnosisId: diagnosis.id,
     });

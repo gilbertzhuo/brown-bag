@@ -42,7 +42,7 @@ const LoadingQuestions = ({ finished }: Props) => {
   }, [finished]);
 
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
+    <div className="w-full flex justify-center items-center p-12 flex-col">
       <Image
         src={theme.theme == "dark" ? "/loading-dark.gif" : "/loading.gif"}
         width={400}

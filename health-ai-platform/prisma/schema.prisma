@@ -36,27 +36,22 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Diagnosis     Diagnosis[]
-  dateOfBirth   DateTime?
-  gender        String?
-  height        Float?
-  weight        Float?
-  location      String?
-  bloodPressure String?
-  medicalHistory String?
-  familyHistory String?
-}
-
-enum DiagnosisType {
-  mcq
-  open_ended
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  Diagnosis      Diagnosis[]
+  dateOfBirth    String?
+  gender         String?
+  height         String?
+  weight         String?
+  location       String?
+  bloodPressure  String?
+  medicalHistory String? @db.LongText
+  familyHistory  String? @db.LongText
 }
 
 model Diagnosis {
@@ -66,7 +61,6 @@ model Diagnosis {
   timeStarted DateTime
   topic       String
   timeEnded   DateTime?
-  diagnosisType    DiagnosisType
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -81,14 +75,9 @@ model TopicCount {
 model Question {
   id                String   @id @default(cuid())
   question          String
-  answer            String
   diagnosisId       String
-  options           Json?
-  percentageCorrect Float?
-  isCorrect         Boolean?
-  questionType      DiagnosisType
-  userAnswer        String?
-
+  percentage        Float?
+  haveSymptom       Boolean?
   diagnosis Diagnosis @relation(fields: [diagnosisId], references: [id])
 
   @@index([diagnosisId])

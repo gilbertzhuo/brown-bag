@@ -12,38 +12,34 @@ import QuestionList from "@/components/statistics/QuestionList";
 
 type Props = {
   params: {
-    gameId: string;
+    diagnosisId: string;
   };
 };
 
-const StatisticsPage = async ({ params: { gameId } }: Props) => {
+const StatisticsPage = async ({ params: { diagnosisId } }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     return redirect("/");
   }
-  const game = await prisma.game.findUnique({
-    where: { id: gameId },
+  const diagnosisResult = await prisma.diagnosis.findUnique({
+    where: { id: diagnosisId },
     include: { questions: true },
   });
-  if (!game) {
-    return redirect("/quiz");
+  if (!diagnosisResult) {
+    return redirect("/diagnosis");
   }
 
   let accuracy: number = 0;
-  if (game.gameType == "mcq") {
-    let totalCorrect: number = game.questions.reduce((acc, question) => {
-      if (question.isCorrect) {
+  const totalSymptoms: number = diagnosisResult.questions.reduce(
+    (acc, question) => {
+      if (question.haveSymptom) {
         return acc + 1;
       }
-      return;
-    }, 0);
-    accuracy = (totalCorrect / game.questions.length) * 100;
-  } else if (game.gameType === "open_ended") {
-    let totalPercentage = game.questions.reduce((acc, question) => {
-      return acc + (question.percentageCorrect || 0);
-    }, 0);
-    accuracy = totalPercentage / game.questions.length;
-  }
+      return acc;
+    },
+    0
+  );
+  accuracy = (totalSymptoms / diagnosisResult.questions.length) * 100;
   accuracy = Math.round(accuracy * 100) / 100;
   return (
     <>
@@ -59,13 +55,8 @@ const StatisticsPage = async ({ params: { gameId } }: Props) => {
         </div>
         <div className="grid gap-4 mt-4 md:grid-cols-7">
           <ResultsCard accuracy={accuracy} />
-          <AccuracyCard accuracy={accuracy} />
-          <TimeTakenCard
-            timeEnded={new Date()}
-            timeStarted={game.timeStarted}
-          />
         </div>
-        <QuestionList questions={game.questions} />
+        <QuestionList questions={diagnosisResult.questions} />
       </div>
     </>
   );

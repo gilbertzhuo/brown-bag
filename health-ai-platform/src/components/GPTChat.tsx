@@ -7,14 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { User } from "@prisma/client";
 import { CornerDownLeft } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import TypingAnimation from "./TypingAnimation";
-
-type Props = {
-  user: Pick<User, "name" | "image">;
-};
 
 type ChatMessage = {
   role: string;
@@ -22,7 +18,7 @@ type ChatMessage = {
   message: string;
 };
 
-const GPTChat = ({ user }: Props) => {
+const GPTChat = () => {
   const [input, setInput] = React.useState("");
   const [chatLog, setChatLog] = React.useState<ChatMessage[]>([
     {
@@ -33,12 +29,29 @@ const GPTChat = ({ user }: Props) => {
   ]);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const bottomRef = React.useRef<HTMLDivElement>(null);
+  const currentUser = useQuery(["userData"], async () => {
+    try {
+      const response = await axios.get("/api/v1/user", {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  });
 
   const { mutate: checkResponse, isLoading: isChecking } = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/v1/chat", chatLog, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        "/api/v1/chat",
+        {
+          medicalProfile: currentUser.data?.user ?? {},
+          messageHistory: chatLog,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     },
   });
@@ -46,10 +59,14 @@ const GPTChat = ({ user }: Props) => {
   const handleSubmit = React.useCallback(
     async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();
-      if (input.trim() === "") return;
+      if (input.trim() === "" || !currentUser.data?.user) return;
       setChatLog((prevChatLog) => [
         ...prevChatLog,
-        { role: "user", userImage: user.image ?? "", message: `${input}` },
+        {
+          role: "user",
+          userImage: currentUser.data?.user.image ?? "",
+          message: `${input}`,
+        },
       ]);
       setInput("");
       checkResponse(undefined, {
@@ -75,7 +92,7 @@ const GPTChat = ({ user }: Props) => {
         },
       });
     },
-    [input, user.image, checkResponse]
+    [input, currentUser.data, checkResponse]
   );
 
   React.useEffect(() => {

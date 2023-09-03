@@ -7,7 +7,7 @@ import UserDetails from "@/components/user-details/UserDetails";
 type Props = {};
 
 export const metadata = {
-  title: "Quiz | HealthAI",
+  title: "Quick Diagnosis | HealthAI",
 };
 const QuizPage = async (props: Props) => {
   const session = await getAuthSession();
@@ -22,7 +22,7 @@ const QuizPage = async (props: Props) => {
         </h2>
       </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-7">
-        <UserDetails user={session.user} />
+        <UserDetails />
         <QuizCreation />
       </div>
     </main>

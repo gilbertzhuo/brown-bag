@@ -16,58 +16,35 @@ type Props = {
 };
 
 const QuestionsList = ({ questions }: Props) => {
+  console.log(questions);
   return (
     <Table className="mt-4">
       <TableCaption>End of list.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[10px]">No.</TableHead>
-          <TableHead>Question & Correct Answer</TableHead>
-          <TableHead>Your Answer</TableHead>
-
-          {questions[0].questionType === "open_ended" && (
-            <TableHead className="w-[10px] text-right">Accuracy</TableHead>
-          )}
+          <TableHead>Question</TableHead>
+          <TableHead>What you indicated</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <>
-          {questions.map(
-            (
-              { answer, question, userAnswer, percentageCorrect, isCorrect },
-              index
-            ) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell>
-                    {question} <br />
-                    <br />
-                    <span className="font-semibold">{answer}</span>
-                  </TableCell>
-                  {questions[0].questionType === "open_ended" ? (
-                    <TableCell className={`font-semibold`}>
-                      {userAnswer}
-                    </TableCell>
-                  ) : (
-                    <TableCell
-                      className={`${
-                        isCorrect ? "text-green-600" : "text-red-600"
-                      } font-semibold`}
-                    >
-                      {userAnswer}
-                    </TableCell>
-                  )}
+          {questions.map(({ question, haveSymptom }, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{question}</TableCell>
 
-                  {percentageCorrect && (
-                    <TableCell className="text-right">
-                      {percentageCorrect}
-                    </TableCell>
+                <TableCell className={`font-semibold`}>
+                  {haveSymptom ? (
+                    <p className="text-rose-400">Experiencing Symptom</p>
+                  ) : (
+                    "-"
                   )}
-                </TableRow>
-              );
-            }
-          )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </>
       </TableBody>
     </Table>

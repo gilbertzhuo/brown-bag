@@ -26,20 +26,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import LoadingQuestions from "../LoadingQuestions";
-import { User } from "@prisma/client";
 import { basic } from "./Records";
 import { Button } from "../ui/button";
-
-type Props = {
-  user: User;
-};
+import { useToast } from "../ui/use-toast";
 
 type Input = z.infer<typeof userSchema>;
 
-const UserDetails = ({ user }: Props) => {
-  const [finished, setFinished] = React.useState(false);
+const UserDetails = () => {
+  const { toast } = useToast();
 
   const currentUser = useQuery(["userData"], async () => {
     try {
@@ -87,24 +81,34 @@ const UserDetails = ({ user }: Props) => {
   });
 
   function onSubmit(input: Input) {
-    console.log(typeof input.dateOfBirth);
-    // updateUser(
-    //   {
-    //     dateOfBirth: input.dateOfBirth,
-    //     gender: input.gender,
-    //     height: input.height,
-    //     weight: input.weight,
-    //     location: input.location,
-    //     bloodPressure: input.bloodPressure,
-    //     medicalHistory: input.medicalHistory,
-    //     familyHistory: input.familyHistory,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       setFinished(true);
-    //     },
-    //   }
-    // );
+    updateUser(
+      {
+        dateOfBirth: input.dateOfBirth,
+        gender: input.gender,
+        height: input.height,
+        weight: input.weight,
+        location: input.location,
+        bloodPressure: input.bloodPressure,
+        medicalHistory: input.medicalHistory,
+        familyHistory: input.familyHistory,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: "Profile",
+            description: "Updated Successfully.",
+            variant: "success",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Error Updating Profile",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        },
+      }
+    );
   }
 
   form.watch();
@@ -118,7 +122,9 @@ const UserDetails = ({ user }: Props) => {
   return (
     <Card className="col-span-3">
       <CardHeader>
-        <CardTitle className="font-bold text-2xl">{user.name}</CardTitle>
+        <CardTitle className="font-bold text-2xl">
+          {currentUser.data?.user.name ?? ""}
+        </CardTitle>
         <CardDescription>Your profile information</CardDescription>
       </CardHeader>
       <Tabs defaultValue="basic" className="w-full">
@@ -144,11 +150,7 @@ const UserDetails = ({ user }: Props) => {
                             <Input
                               type={records.type}
                               placeholder={records.placeholder}
-                              defaultValue={
-                                field.value instanceof Date
-                                  ? field.value.toISOString().split("T")[0]
-                                  : field.value
-                              }
+                              defaultValue={field.value}
                               onChange={(e) => {
                                 form.setValue(records.name, e.target.value);
                               }}
@@ -197,7 +199,7 @@ const UserDetails = ({ user }: Props) => {
                       <FormLabel>Medical History</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="resize-none"
+                          className="resize-none !h-[125px]"
                           placeholder="Enter any medical history"
                           defaultValue={field.value}
                           onChange={(e) => {
@@ -222,7 +224,7 @@ const UserDetails = ({ user }: Props) => {
                       <FormLabel>Family History</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="resize-none h-16"
+                          className="resize-none !h-[125px]"
                           placeholder="Enter any family medical history"
                           defaultValue={field.value}
                           onChange={(e) => {

@@ -19,34 +19,19 @@ export const POST = async (req: Request, res: Response) => {
       );
     }
     const body = await req.json();
-    const { amount, topic, type } = QuizCreationSchema.parse(body);
+    const { amount, topic } = QuizCreationSchema.parse(body);
     let questions: any;
-    if (type === "open_ended") {
-      questions = await strict_output(
-        `You are a helpful AI that is able to generate a pair of questions and answers, the length of the answer should not exceed 15 words, store all the pairs of answers and questions in a JSON array.`,
-        new Array(amount).fill(
-          `You are to generate a random hard open-ended question about ${topic}.`
-        ),
-        {
-          question: "question",
-          answer: "answer with max length of 15 words",
-        }
-      );
-    } else if (type === "mcq") {
-      questions = await strict_output(
-        `You are a helpful AI that is able to generate mcq questions and answers, the length of the each answer should not exceed 15 words, store all the pairs of answers and questions in a JSON array.`,
-        new Array(amount).fill(
-          `You are to generate a random mcq question about ${topic}.`
-        ),
-        {
-          question: "question",
-          answer: "answer with a max length of 15 words",
-          option1: "1st option with max length of 15 words",
-          option2: "2st option with max length of 15 words",
-          option3: "3st option with max length of 15 words",
-        }
-      );
-    }
+
+    questions = await strict_output(
+      `You are a helpful medical AI that is able to generate mcq questions that ask user if they are experiencing any symptoms, store all the questions in a JSON array.`,
+      new Array(amount).fill(
+        `You are to generate a random mcq question about ${topic}, to check if the user is experiencing the symptoms.`
+      ),
+      {
+        question: "question",
+      }
+    );
+
     return NextResponse.json(
       {
         questions,

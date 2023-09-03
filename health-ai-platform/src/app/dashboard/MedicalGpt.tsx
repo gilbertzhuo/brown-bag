@@ -19,16 +19,11 @@ const MedicalGpt = async () => {
       <CardContent className="pb-2">
         <p className="text-sm text-muted-foreground">
           An advanced AI language model specialized in healthcare, offering
-          precise and rapid medical insights.
+          precise and rapid medical insights based on your medical profile.
         </p>
       </CardContent>
       <CardContent className="pl-2">
-        <GPTChat
-          user={{
-            name: session?.user.name || null,
-            image: session?.user.image || null,
-          }}
-        />
+        <GPTChat />
       </CardContent>
     </Card>
   );
