@@ -22,9 +22,7 @@ const ConsultationHistory = async () => {
               08:28 AM, 06 April 2023
             </p>
             <p className="text-sm font-medium">Marcus Yep (GP)</p>
-            <p className="text-sm text-muted-foreground">
-              Temus Clinic @ Sembawang
-            </p>
+            <p className="text-sm text-muted-foreground">Clinic @ Sembawang</p>
           </div>
         </div>
       </div>
@@ -43,9 +41,7 @@ const ConsultationHistory = async () => {
               02:24 PM, 05 March 2023
             </p>
             <p className="text-sm font-medium">Diana Sam (GP)</p>
-            <p className="text-sm text-muted-foreground">
-              Temus Clinic @ Online
-            </p>
+            <p className="text-sm text-muted-foreground">Clinic @ Online</p>
           </div>
         </div>
       </div>
